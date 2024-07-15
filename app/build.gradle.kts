@@ -1,8 +1,19 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
+}
+
+// Fetch apiKey value stored in local.properties file
+// Store format: local.properties>apiKey="your_api_key_here"
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
 }
 
 android {
@@ -20,6 +31,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField(
+            "String",
+            "API_KEY",
+            "\"${localProperties.getProperty("apiKey")}\""
+        )
     }
 
     buildTypes {
@@ -68,6 +84,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+
     // Hilt dependencies
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-compiler:2.51.1")
@@ -86,3 +103,5 @@ dependencies {
 kapt {
     correctErrorTypes = true
 }
+
+
