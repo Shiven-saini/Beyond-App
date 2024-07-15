@@ -1,4 +1,4 @@
-package com.space.beyond
+package com.space.beyond.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
