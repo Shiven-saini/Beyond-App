@@ -1,6 +1,17 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+}
+
+// Fetch apiKey value stored in local.properties file
+// Store format: local.properties>apiKey="your_api_key_here"
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
 }
 
 android {
@@ -18,6 +29,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField(
+            "String",
+            "API_KEY",
+            "\"${localProperties.getProperty("apiKey")}\""
+        )
     }
 
     buildTypes {
